@@ -15,25 +15,28 @@ import FaqSection from '@/components/sections/FaqSection';
 import CtaSection from '@/components/sections/CtaSection';
 import TrustSection from '@/components/sections/TrustSection';
 import ContactSection from '@/components/sections/ContactSection';
+import { useContent } from '@/hooks/useContent';
 
 const Index = () => {
+  const { data } = useContent();
+
   return (
     <Layout>
       <HeroSection />
       <FeaturesSection />
-      <ServicesSection />
+      <ServicesSection items={data.services} />
       <ProcessSection />
-      <PricesSection />
+      <PricesSection items={data.prices} />
       <AboutSection />
-      <PortfolioSection />
+      <PortfolioSection items={data.portfolio} />
       <GallerySection />
-      <ReviewsSection />
+      <ReviewsSection items={data.reviews} />
       <CalculatorSection />
-      <BlogSection />
+      <BlogSection items={data.blog_posts} />
       <CertificatesSection />
-      <FaqSection />
+      <FaqSection items={data.faqs} />
       <CtaSection />
-      <TrustSection />
+      <TrustSection items={data.team_members} />
       <ContactSection />
     </Layout>
   );

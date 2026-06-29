@@ -1,0 +1,1 @@
+{"tests": [{"name": "Get all content", "method": "GET", "path": "/", "expectedStatus": 200}, {"name": "Get services", "method": "GET", "path": "/?table=services", "expectedStatus": 200}, {"name": "Unauthorized create", "method": "POST", "path": "/?table=services", "body": {"title": "Test"}, "expectedStatus": 401, "bodyMatcher": "partial"}]}

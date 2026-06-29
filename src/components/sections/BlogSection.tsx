@@ -2,14 +2,33 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
+import { ContentItem } from '@/hooks/useContent';
 
-const posts = [
-  { cat: 'Советы', icon: 'Refrigerator', title: 'Как продлить срок службы холодильника', date: '25 июня 2026', read: '5 мин', color: 'gradient-blue' },
-  { cat: 'Инструкции', icon: 'WashingMachine', title: 'Что делать, если стиралка не сливает воду', date: '20 июня 2026', read: '7 мин', color: 'gradient-brand' },
-  { cat: 'Обзоры', icon: 'Lightbulb', title: '7 признаков, что технике нужен ремонт', date: '15 июня 2026', read: '4 мин', color: 'gradient-blue' },
-];
+interface Props {
+  items?: ContentItem[];
+}
 
-const BlogSection = () => {
+const fallback = [
+  { category: 'Советы', icon: 'Refrigerator', title: 'Как продлить срок службы холодильника', published_at: '2026-06-25', read_time: '5 мин' },
+  { category: 'Инструкции', icon: 'WashingMachine', title: 'Что делать, если стиралка не сливает воду', published_at: '2026-06-20', read_time: '7 мин' },
+  { category: 'Обзоры', icon: 'Lightbulb', title: '7 признаков, что технике нужен ремонт', published_at: '2026-06-15', read_time: '4 мин' },
+] as unknown as ContentItem[];
+
+const fmt = (d: string) => {
+  const date = new Date(d);
+  return isNaN(date.getTime()) ? d : date.toLocaleDateString('ru', { day: 'numeric', month: 'long', year: 'numeric' });
+};
+
+const BlogSection = ({ items }: Props) => {
+  const posts = (items && items.length ? items : fallback).map((p, idx) => ({
+    cat: String(p.category),
+    icon: String(p.icon),
+    title: String(p.title),
+    date: fmt(String(p.published_at)),
+    read: String(p.read_time),
+    color: idx % 2 ? 'gradient-brand' : 'gradient-blue',
+  }));
+
   return (
     <section id="blog" className="py-20 mesh-bg">
       <div className="container">

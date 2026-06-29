@@ -3,13 +3,18 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import Icon from '@/components/ui/icon';
+import { ContentItem } from '@/hooks/useContent';
 
-const team = [
-  { name: 'Андрей Смирнов', role: 'Старший мастер', exp: '12 лет опыта', skill: 'Холодильное оборудование' },
-  { name: 'Павел Громов', role: 'Мастер-электронщик', exp: '9 лет опыта', skill: 'Телевизоры и СВЧ' },
-  { name: 'Сергей Белов', role: 'Мастер по стиралкам', exp: '11 лет опыта', skill: 'Стиральные машины' },
-  { name: 'Олег Зайцев', role: 'Климат-техник', exp: '8 лет опыта', skill: 'Кондиционеры' },
-];
+interface Props {
+  items?: ContentItem[];
+}
+
+const fallback = [
+  { name: 'Андрей Смирнов', role: 'Старший мастер', experience: '12 лет опыта', skill: 'Холодильное оборудование' },
+  { name: 'Павел Громов', role: 'Мастер-электронщик', experience: '9 лет опыта', skill: 'Телевизоры и СВЧ' },
+  { name: 'Сергей Белов', role: 'Мастер по стиралкам', experience: '11 лет опыта', skill: 'Стиральные машины' },
+  { name: 'Олег Зайцев', role: 'Климат-техник', experience: '8 лет опыта', skill: 'Кондиционеры' },
+] as unknown as ContentItem[];
 
 const guarantees = [
   { icon: 'FileCheck', text: 'Договор с фиксированной ценой' },
@@ -18,7 +23,14 @@ const guarantees = [
   { icon: 'ShieldCheck', text: 'Гарантия до 3 лет' },
 ];
 
-const TrustSection = () => {
+const TrustSection = ({ items }: Props) => {
+  const team = (items && items.length ? items : fallback).map((m) => ({
+    name: String(m.name),
+    role: String(m.role),
+    exp: String(m.experience),
+    skill: String(m.skill),
+  }));
+
   return (
     <section className="py-20 mesh-bg">
       <div className="container">

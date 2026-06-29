@@ -3,24 +3,26 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
+import { ContentItem } from '@/hooks/useContent';
 
-const data: Record<string, { name: string; price: string; time: string }[]> = {
+interface Props {
+  items?: ContentItem[];
+}
+
+const fallbackData: Record<string, { name: string; price: string; time: string }[]> = {
   fridge: [
     { name: 'Диагностика', price: 'Бесплатно', time: '20 мин' },
     { name: 'Заправка фреоном', price: 'от 2 500 ₽', time: '1 час' },
     { name: 'Замена компрессора', price: 'от 4 900 ₽', time: '2 часа' },
-    { name: 'Замена термостата', price: 'от 1 800 ₽', time: '40 мин' },
   ],
   washer: [
     { name: 'Диагностика', price: 'Бесплатно', time: '20 мин' },
     { name: 'Замена ТЭНа', price: 'от 1 900 ₽', time: '1 час' },
     { name: 'Замена подшипников', price: 'от 3 500 ₽', time: '2.5 часа' },
-    { name: 'Чистка сливного насоса', price: 'от 1 200 ₽', time: '40 мин' },
   ],
   tv: [
     { name: 'Диагностика', price: 'Бесплатно', time: '20 мин' },
     { name: 'Замена подсветки', price: 'от 2 800 ₽', time: '1.5 часа' },
-    { name: 'Ремонт блока питания', price: 'от 2 200 ₽', time: '1 час' },
     { name: 'Замена матрицы', price: 'от 6 500 ₽', time: '2 часа' },
   ],
 };
@@ -31,7 +33,16 @@ const tabs = [
   { value: 'tv', label: 'Телевизоры', icon: 'Tv' },
 ];
 
-const PricesSection = () => {
+const PricesSection = ({ items }: Props) => {
+  const data: Record<string, { name: string; price: string; time: string }[]> =
+    items && items.length
+      ? items.reduce((acc, p) => {
+          const cat = String(p.category);
+          (acc[cat] = acc[cat] || []).push({ name: String(p.name), price: String(p.price), time: String(p.duration) });
+          return acc;
+        }, {} as Record<string, { name: string; price: string; time: string }[]>)
+      : fallbackData;
+
   return (
     <section id="prices" className="py-20 mesh-bg">
       <div className="container">

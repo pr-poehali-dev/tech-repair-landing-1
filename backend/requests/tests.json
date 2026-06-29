@@ -1,0 +1,1 @@
+{"tests": [{"name": "Create request", "method": "POST", "path": "/", "body": {"name": "Тест", "phone": "+79990001122", "appliance": "fridge", "message": "Тестовая заявка"}, "expectedStatus": 200, "expectedBody": {"ok": true}, "bodyMatcher": "partial"}, {"name": "Unauthorized list", "method": "GET", "path": "/", "expectedStatus": 401, "bodyMatcher": "partial"}]}

@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
+import { api } from '@/lib/api';
 import Icon from '@/components/ui/icon';
 
 const contacts = [
@@ -18,10 +20,27 @@ const contacts = [
 
 const ContactSection = () => {
   const { toast } = useToast();
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [appliance, setAppliance] = useState('');
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({ title: 'Заявка отправлена!', description: 'Мы перезвоним вам в течение 5 минут.' });
+    setLoading(true);
+    try {
+      await api.createRequest({ name, phone, appliance, message });
+      toast({ title: 'Заявка отправлена!', description: 'Мы перезвоним вам в течение 5 минут.' });
+      setName('');
+      setPhone('');
+      setAppliance('');
+      setMessage('');
+    } catch {
+      toast({ title: 'Ошибка', description: 'Не удалось отправить заявку. Попробуйте позвонить нам.', variant: 'destructive' });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -58,16 +77,16 @@ const ContactSection = () => {
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="name">Имя</Label>
-                  <Input id="name" placeholder="Иван" required />
+                  <Input id="name" placeholder="Иван" required value={name} onChange={(e) => setName(e.target.value)} />
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="phone">Телефон</Label>
-                  <Input id="phone" type="tel" placeholder="+7 (___) ___-__-__" required />
+                  <Input id="phone" type="tel" placeholder="+7 (___) ___-__-__" required value={phone} onChange={(e) => setPhone(e.target.value)} />
                 </div>
               </div>
               <div className="space-y-1.5">
                 <Label>Тип техники</Label>
-                <Select>
+                <Select value={appliance} onValueChange={setAppliance}>
                   <SelectTrigger><SelectValue placeholder="Выберите технику" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="fridge">Холодильник</SelectItem>
@@ -79,7 +98,7 @@ const ContactSection = () => {
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="msg">Описание проблемы</Label>
-                <Textarea id="msg" placeholder="Опишите, что случилось с техникой..." rows={3} />
+                <Textarea id="msg" placeholder="Опишите, что случилось с техникой..." rows={3} value={message} onChange={(e) => setMessage(e.target.value)} />
               </div>
               <div className="flex items-center gap-2">
                 <Checkbox id="agree" required />
@@ -87,8 +106,9 @@ const ContactSection = () => {
                   Согласен с обработкой персональных данных
                 </Label>
               </div>
-              <Button type="submit" size="lg" className="gradient-brand text-white w-full shadow-lg shadow-primary/30">
-                <Icon name="Send" size={18} className="mr-2" /> Отправить заявку
+              <Button type="submit" size="lg" disabled={loading} className="gradient-brand text-white w-full shadow-lg shadow-primary/30">
+                <Icon name={loading ? 'Loader2' : 'Send'} size={18} className={`mr-2 ${loading ? 'animate-spin' : ''}`} />
+                {loading ? 'Отправляем...' : 'Отправить заявку'}
               </Button>
             </form>
           </CardContent>

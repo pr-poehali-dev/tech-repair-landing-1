@@ -2,17 +2,29 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Icon from '@/components/ui/icon';
+import { ContentItem } from '@/hooks/useContent';
 
-const cases = [
-  { title: 'Холодильник Bosch', problem: 'Не охлаждал камеру', solution: 'Заменили компрессор и заправили систему', time: '2 часа', img: 'Refrigerator' },
-  { title: 'Стиральная LG', problem: 'Сильный шум при отжиме', solution: 'Замена подшипников и сальника', time: '2.5 часа', img: 'WashingMachine' },
-  { title: 'Телевизор Samsung', problem: 'Тёмный экран', solution: 'Восстановили подсветку матрицы', time: '1.5 часа', img: 'Tv' },
-  { title: 'Посудомойка Electrolux', problem: 'Не сливала воду', solution: 'Замена сливного насоса', time: '1 час', img: 'CookingPot' },
-  { title: 'Духовка Hansa', problem: 'Не набирала температуру', solution: 'Замена нагревательного элемента', time: '40 мин', img: 'Microwave' },
-  { title: 'Кондиционер Daikin', problem: 'Не охлаждал воздух', solution: 'Заправка фреоном, чистка', time: '1.5 часа', img: 'AirVent' },
-];
+interface Props {
+  items?: ContentItem[];
+}
 
-const PortfolioSection = () => {
+const fallback = [
+  { title: 'Холодильник Bosch', problem: 'Не охлаждал камеру', solution: 'Заменили компрессор и заправили систему', duration: '2 часа', icon: 'Refrigerator' },
+  { title: 'Стиральная LG', problem: 'Сильный шум при отжиме', solution: 'Замена подшипников и сальника', duration: '2.5 часа', icon: 'WashingMachine' },
+  { title: 'Телевизор Samsung', problem: 'Тёмный экран', solution: 'Восстановили подсветку матрицы', duration: '1.5 часа', icon: 'Tv' },
+  { title: 'Посудомойка Electrolux', problem: 'Не сливала воду', solution: 'Замена сливного насоса', duration: '1 час', icon: 'CookingPot' },
+  { title: 'Духовка Hansa', problem: 'Не набирала температуру', solution: 'Замена нагревательного элемента', duration: '40 мин', icon: 'Microwave' },
+] as unknown as ContentItem[];
+
+const PortfolioSection = ({ items }: Props) => {
+  const cases = (items && items.length ? items : fallback).map((c) => ({
+    title: String(c.title),
+    problem: String(c.problem),
+    solution: String(c.solution),
+    time: String(c.duration),
+    img: String(c.icon),
+  }));
+
   return (
     <section id="portfolio" className="py-20 mesh-bg">
       <div className="container">

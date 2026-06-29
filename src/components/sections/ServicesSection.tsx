@@ -3,17 +3,30 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import Icon from '@/components/ui/icon';
+import { ContentItem } from '@/hooks/useContent';
 
-const services = [
-  { icon: 'Refrigerator', title: 'Холодильники', from: '1 200', popular: true, list: ['Не морозит', 'Течёт вода', 'Шум и стук', 'Замена компрессора'] },
-  { icon: 'WashingMachine', title: 'Стиральные машины', from: '900', popular: true, list: ['Не сливает', 'Не отжимает', 'Замена ТЭНа', 'Ошибки на дисплее'] },
-  { icon: 'Microwave', title: 'СВЧ и духовки', from: '800', popular: false, list: ['Не греет', 'Не включается', 'Замена магнетрона', 'Ремонт панели'] },
-  { icon: 'Tv', title: 'Телевизоры', from: '1 100', popular: false, list: ['Нет изображения', 'Полосы на экране', 'Нет звука', 'Замена подсветки'] },
-  { icon: 'AirVent', title: 'Кондиционеры', from: '1 500', popular: false, list: ['Не охлаждает', 'Течёт вода', 'Заправка фреоном', 'Чистка'] },
-  { icon: 'CookingPot', title: 'Посудомойки', from: '950', popular: false, list: ['Не сливает', 'Не моет', 'Замена насоса', 'Протечки'] },
-];
+interface Props {
+  items?: ContentItem[];
+}
 
-const ServicesSection = () => {
+const fallback = [
+  { icon: 'Refrigerator', title: 'Холодильники', price_from: '1 200', is_popular: true, features: 'Не морозит;Течёт вода;Шум и стук;Замена компрессора' },
+  { icon: 'WashingMachine', title: 'Стиральные машины', price_from: '900', is_popular: true, features: 'Не сливает;Не отжимает;Замена ТЭНа;Ошибки на дисплее' },
+  { icon: 'Microwave', title: 'СВЧ и духовки', price_from: '800', is_popular: false, features: 'Не греет;Не включается;Замена магнетрона;Ремонт панели' },
+  { icon: 'Tv', title: 'Телевизоры', price_from: '1 100', is_popular: false, features: 'Нет изображения;Полосы на экране;Нет звука;Замена подсветки' },
+  { icon: 'AirVent', title: 'Кондиционеры', price_from: '1 500', is_popular: false, features: 'Не охлаждает;Течёт вода;Заправка фреоном;Чистка' },
+  { icon: 'CookingPot', title: 'Посудомойки', price_from: '950', is_popular: false, features: 'Не сливает;Не моет;Замена насоса;Протечки' },
+] as unknown as ContentItem[];
+
+const ServicesSection = ({ items }: Props) => {
+  const services = (items && items.length ? items : fallback).map((s) => ({
+    icon: String(s.icon),
+    title: String(s.title),
+    from: String(s.price_from),
+    popular: Boolean(s.is_popular),
+    list: String(s.features || '').split(';').filter(Boolean),
+  }));
+
   return (
     <section id="services" className="py-20">
       <div className="container">

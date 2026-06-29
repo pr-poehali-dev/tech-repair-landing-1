@@ -84,6 +84,9 @@ const Footer = () => {
           <div className="flex gap-6">
             <a href="#" className="hover:text-primary transition-colors">Политика конфиденциальности</a>
             <a href="#" className="hover:text-primary transition-colors">Договор оферты</a>
+            <a href="/admin" className="hover:text-primary transition-colors flex items-center gap-1">
+              <Icon name="Lock" size={12} /> Админ-панель
+            </a>
           </div>
         </div>
       </div>
